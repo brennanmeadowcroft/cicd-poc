@@ -26,4 +26,17 @@ describe("E2E Tests", function () {
       });
     });
   });
+
+  describe("GET /accounts", function () {
+    it("should return an array of records", function (done) {
+      const testUrl = `${baseUrl}/accounts`;
+      request.get(testUrl).then(response => {
+        expect(response.status).to.eq(200);
+        expect(response.data).to.be.an("array");
+        expect(response.data.length).to.eq(2);
+
+        done();
+      });
+    });
+  });
 });

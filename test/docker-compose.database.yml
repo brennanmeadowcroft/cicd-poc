@@ -1,0 +1,48 @@
+version: "3"
+services:
+  database:
+    image: brennan/cicd-poc-database:latest
+    container_name: database
+    environment:
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=testdb
+    ports:
+      - 5432:5432
+    logging:
+      driver: none
+  api:
+    build:
+      context: ../
+      dockerfile: docker/app.Dockerfile
+    container_name: test-app
+    environment:
+      - PORT=8000
+      - DB_USER=admin
+      - DB_PASSWORD=secret
+      - DB_NAME=testdb
+      - DB_HOST=database
+    ports:
+      - 8000:8000
+    logging:
+      driver: none
+    depends_on:
+      - database
+  e2e_tests:
+    build:
+      context: ../
+      dockerfile: docker/test.Dockerfile
+    depends_on:
+      - api
+      - database
+    environment:
+      - BASE_URL=http://api:8000
+    command:
+      [
+        "./wait-for-it/wait-for-it.sh",
+        "database:5432",
+        "--",
+        "node_modules/.bin/mocha",
+        "-c",
+        "test/*.e2e.js",
+      ]

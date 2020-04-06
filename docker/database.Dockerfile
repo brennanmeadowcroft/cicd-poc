@@ -1,3 +1,4 @@
-FROM postgres:11.5-alpine
+FROM postgres:latest
 ENV POSTGRES_DB testdb
-COPY ../database/seeds.sql /docker-entrypoint-initdb.d/001_data.sql
+COPY ./docker/database/tables.sql /docker-entrypoint-initdb.d/001_data.sql
+COPY ./docker/database/seeds.sql /docker-entrypoint-initdb.d/002_data.sql
