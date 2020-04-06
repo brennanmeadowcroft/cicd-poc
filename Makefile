@@ -23,21 +23,15 @@ run-app-local:
 run-tests-local:
 	BASE_URL=$(BASE_URL) node_modules/.bin/mocha -c test/*.e2e.js
 
-stop-app:
-	docker stop cicd-test-app
-
 run-tests-docker: build-tests
 	@echo "${BPurple}Running tests against URL: ${Bold}$(BASE_URL)${Normal}"
 	docker run --rm --network host --env BASE_URL=$(BASE_URL) --name cicd-test-e2e brennan/cicd-poc-tests:latest
 
-run-tests-docker-compose:
+run-tests-docker-compose: 
 	docker-compose -f ./test/docker-compose.yml up --abort-on-container-exit --build --remove-orphans
 
-run-tests-deployed: 
-	DEPLOYED_PORT=8080
-	@echo "${BRed}Running server on different port to simulate a deployment${Normal}"
-	SERVER_PORT=$(DEPLOYED_PORT) make run-app-docker
+run-system-docker-compose:
+	docker-compose -f ./test/docker-compose.database.yml up --abort-on-container-exit --build --remove-orphans
 
-	DEPLOYED_URL:=http://localhost:$(DEPLOYED_PORT)
-	@echo "${BRed}Running tests in Docker against the 'deployed' service: ${Bold}${DEPLOYED_URL}${Normal}"
-	docker run --rm --network host --env BASE_URL=$(DEPLOYED_URL) --name cicd-test-e2e brennan/cicd-poc-tests:latest
+stop-app:
+	docker stop cicd-test-app

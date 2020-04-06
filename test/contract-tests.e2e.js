@@ -4,9 +4,9 @@ const request = require("axios");
 const baseUrl = process.env.BASE_URL;
 console.log("Running tests against baseUrl: ", baseUrl);
 
-describe("E2E Tests", function() {
-  describe("GET /heartbeat", function() {
-    it("should return a response", function(done) {
+describe("E2E Tests", function () {
+  describe("GET /heartbeat", function () {
+    it("should return a response", function (done) {
       const testUrl = `${baseUrl}/heartbeat`;
       request.get(testUrl).then(response => {
         expect(response.status).to.eq(200);
@@ -16,8 +16,8 @@ describe("E2E Tests", function() {
     });
   });
 
-  describe("GET /users", function() {
-    it("shoudl return the correct response", function(done) {
+  describe("GET /users", function () {
+    it("shoudl return the correct response", function (done) {
       const testUrl = `${baseUrl}/users`;
       request.get(testUrl).then(response => {
         expect(response.status).to.eq(200);
