@@ -1,0 +1,20 @@
+version: "3"
+services:
+  api:
+    image: brennan/cicd-poc-app:latest
+    container_name: test-app
+    environment:
+      - PORT=8000
+    ports:
+      - 8000:8000
+    logging:
+      # We don't want our test output cluttered by service logs
+      driver: none
+  e2e_tests:
+    build:
+      context: ../
+      dockerfile: docker/test.Dockerfile
+    depends_on:
+      - api
+    environment:
+      - BASE_URL=http://api:8000

@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker/compose:latest
+  steps:
+    - checkout
+
+    - run:
+        name: Run tests
+        command: make run-tests-docker-compose
